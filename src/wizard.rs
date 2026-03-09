@@ -17,6 +17,9 @@ pub enum WizardStep {
 }
 
 impl WizardStep {
+    /// Returns the number of steps shown in the progress indicator.
+    /// The Welcome step is excluded from the progress indicator, so this
+    /// reflects steps 1–4: ServerConfig, ClawIdentity, ClawPersonality, Finish.
     #[allow(dead_code)]
     pub fn total_steps() -> usize {
         4
@@ -112,6 +115,8 @@ pub fn render(ui: &mut egui::Ui, state: &mut WizardState, config: &mut ClawConfi
 
 fn render_progress(ui: &mut egui::Ui, step: &WizardStep) {
     let current = step.current_index();
+    // The Welcome step is not shown in the progress indicator; we display
+    // the 4 post-welcome steps: ServerConfig (1), Identity (2), Personality (3), Finish (4).
     let labels = ["服务器配置", "身份定义", "性格定义", "完成"];
 
     ui.horizontal(|ui| {
