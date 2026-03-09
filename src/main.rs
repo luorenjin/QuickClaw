@@ -1,6 +1,7 @@
 mod app;
 mod chat;
 mod config;
+mod environment;
 mod wizard;
 
 use app::QuickClawApp;
