@@ -1,0 +1,74 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  color: var(--text-secondary);
+}
+.app-loading-icon {
+  font-size: 48px;
+}
+
+/* ── Nav bar ──────────────────────────────────────────────────────────────── */
+.app-nav {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 44px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 16px;
+  /* Enable Tauri window drag on the nav bar */
+  -webkit-app-region: drag;
+}
+
+.app-nav-brand {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.app-nav-links {
+  display: flex;
+  gap: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.app-nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.app-nav-btn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+.app-nav-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Main area ────────────────────────────────────────────────────────────── */
+.app-main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
