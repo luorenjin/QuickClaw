@@ -4,8 +4,8 @@
 
 ## 特性
 
-- 🔍 **环境自动检测** — 自动检测系统中的 Node.js、Git、Claude Code，缺失时一键自动安装
-- 📦 **OpenClaw 本地安装** — 自动克隆 OpenClaw 仓库、安装依赖、启动本地服务
+- 🔍 **环境自动检测** — 自动检测系统中的 Node.js、Claude Code，缺失时一键自动安装
+- 📦 **OpenClaw 便捷安装** — 通过 npm 一键安装 OpenClaw，自动安装依赖、启动本地服务
 - 🚀 **引导式安装向导** — 七步向导（欢迎 → 环境检查 → 安装OpenClaw → 服务器配置 → 身份定义 → 性格定义 → 完成），几分钟内完成所有设置
 - 🎭 **Claw 身份定义** — 为您的 AI 助手定义独特的名字和角色定位
 - ✨ **性格定制** — 灵活配置 Claw 的性格特征和行为风格（系统提示词）
@@ -19,7 +19,7 @@
 - [Rust](https://rustup.rs/) 1.75+
 - Linux 额外需要：`libgtk-3-dev`、`libssl-dev`（用于 OpenGL 渲染）
 
-> **注意**：Node.js、Git、Claude Code 等 OpenClaw 运行依赖会由 QuickClaw 自动检测并引导安装，无需手动配置。
+> **注意**：Node.js、Claude Code 等 OpenClaw 运行依赖会由 QuickClaw 自动检测并引导安装，无需手动配置。Git 仅作为可选的开发工具，OpenClaw 可通过 npm 直接安装。
 
 ### 构建与运行
 
@@ -39,8 +39,8 @@ cargo build --release
 ### 使用流程
 
 1. **首次启动** — 自动进入配置向导
-2. **第一步：系统环境检查** — 自动检测 Node.js、Git、Claude Code（AI 能力插件）；缺失时支持一键自动安装
-3. **第二步：安装 OpenClaw** — 选择安装目录，自动克隆仓库并安装依赖
+2. **第一步：系统环境检查** — 自动检测 Node.js、Claude Code（AI 能力插件）；缺失时支持一键自动安装
+3. **第二步：安装 OpenClaw** — 选择安装目录，通过 npm 自动安装 OpenClaw 及其依赖
 4. **第三步：服务器配置** — 确认 OpenClaw 服务器地址（自动安装后会自动填写 `localhost:8080`）
 5. **第四步：Claw 身份定义** — 设置 Claw 的名字和角色定位
 6. **第五步：Claw 性格定义** — 选择性格特征，编写系统提示词
@@ -51,8 +51,8 @@ cargo build --release
 | 组件 | 必需 | 用途 | 自动安装方式 |
 |------|------|------|------------|
 | Node.js | ✅ | OpenClaw 运行时（需 v18+）| Linux: apt / macOS: brew / Windows: winget |
-| Git | ✅ | 克隆与更新 OpenClaw 仓库 | Linux: apt / macOS: brew / Windows: winget |
 | Claude Code | ⭕ 可选 | AI 能力插件（@anthropic-ai/claude-code）| npm install -g |
+| Git | ⭕ 可选 | 开发工具（仅用于 QuickClaw 开发）| Linux: apt / macOS: brew / Windows: winget |
 
 ## 配置文件
 
