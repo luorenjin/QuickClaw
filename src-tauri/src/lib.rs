@@ -1,5 +1,6 @@
 mod config;
 mod environment;
+mod studio;
 
 use config::ClawConfig;
 use environment::{
@@ -393,6 +394,8 @@ pub fn run() {
             commands::launch_openclaw,
             commands::test_connection,
             commands::send_chat_message,
+            studio::get_studio_seed,
+            studio::validate_studio_message,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
