@@ -66,8 +66,8 @@ pub fn all_dependencies() -> Vec<Dependency> {
         },
         Dependency {
             name: "Git",
-            description: "用于下载和更新 OpenClaw",
-            required: true,
+            description: "开发工具（可选），OpenClaw 可通过 npm 直接安装",
+            required: false,
             status: DepStatus::Unknown,
         },
         Dependency {
@@ -276,8 +276,8 @@ fn install_claude_code(progress: &SharedProgress) -> Result<(), String> {
 pub struct OpenClawInstallConfig {
     /// 安装目标目录（父目录，openclaw 子目录将在其中创建）
     pub install_dir: String,
-    /// OpenClaw Git 仓库地址
-    pub repo_url: String,
+    /// OpenClaw npm 包名称
+    pub npm_package: String,
 }
 
 impl Default for OpenClawInstallConfig {
@@ -285,10 +285,7 @@ impl Default for OpenClawInstallConfig {
         let home = home_dir();
         Self {
             install_dir: format!("{}/.quickclaw", home),
-            // NOTE: users should verify the repo URL before proceeding.
-            // Future improvement: support GPG-signed tags or checksum validation
-            // to guarantee integrity of downloaded code before execution.
-            repo_url: "https://github.com/luorenjin/OpenClaw.git".into(),
+            npm_package: "openclaw".into(),
         }
     }
 }
@@ -330,31 +327,19 @@ fn install_openclaw_sync(config: &OpenClawInstallConfig, progress: &SharedProgre
     std::fs::create_dir_all(install_path)
         .map_err(|e| format!("创建安装目录失败: {}", e))?;
 
-    // 2. 克隆或更新仓库
+    // 2. 使用 npm 安装 OpenClaw
     if openclaw_dir.exists() {
         log(progress, "OpenClaw 目录已存在，正在更新...");
-        run_cmd_in_logged(progress, "git", &["pull", "--rebase"], &openclaw_dir)?;
+        // 更新到最新版本
+        run_cmd_in_logged(progress, "npm", &["install", &config.npm_package], install_path)?;
     } else {
-        log(progress, format!("克隆 OpenClaw 仓库: {}", config.repo_url));
-        run_cmd_in_logged(
-            progress,
-            "git",
-            &["clone", "--depth=1", &config.repo_url, "openclaw"],
-            install_path,
-        )?;
-    }
+        log(progress, format!("通过 npm 安装 OpenClaw: {}", config.npm_package));
+        // 创建 openclaw 目录并初始化
+        std::fs::create_dir_all(&openclaw_dir)
+            .map_err(|e| format!("创建 OpenClaw 目录失败: {}", e))?;
 
-    // 3. 安装 npm 依赖
-    log(progress, "安装 npm 依赖...");
-    run_cmd_in_logged(progress, "npm", &["install", "--prefer-offline"], &openclaw_dir)?;
-
-    // 4. 尝试首次构建（如果有 build 脚本）
-    let pkg_json = openclaw_dir.join("package.json");
-    if let Ok(content) = std::fs::read_to_string(&pkg_json) {
-        if content.contains("\"build\"") {
-            log(progress, "构建 OpenClaw...");
-            run_cmd_in_logged(progress, "npm", &["run", "build"], &openclaw_dir)?;
-        }
+        // 使用 npm 安装 openclaw 包
+        run_cmd_in_logged(progress, "npm", &["install", &config.npm_package], &openclaw_dir)?;
     }
 
     log(progress, format!("OpenClaw 已安装至: {}", openclaw_dir.display()));
@@ -516,7 +501,7 @@ mod tests {
     fn test_all_dependencies_has_required_entries() {
         let deps = all_dependencies();
         assert!(deps.iter().any(|d| d.name == "Node.js" && d.required));
-        assert!(deps.iter().any(|d| d.name == "Git" && d.required));
+        assert!(deps.iter().any(|d| d.name == "Git" && !d.required));
         assert!(deps.iter().any(|d| d.name == "Claude Code" && !d.required));
     }
 
@@ -542,7 +527,7 @@ mod tests {
     fn test_openclaw_default_install_config() {
         let cfg = OpenClawInstallConfig::default();
         assert!(cfg.install_dir.contains(".quickclaw"));
-        assert!(cfg.repo_url.contains("OpenClaw"));
+        assert_eq!(cfg.npm_package, "openclaw");
     }
 
     #[test]

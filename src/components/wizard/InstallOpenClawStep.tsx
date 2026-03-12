@@ -16,7 +16,7 @@ export default function InstallOpenClawStep({
   onBack,
 }: Props) {
   const [installDir, setInstallDir] = useState("");
-  const [repoUrl, setRepoUrl] = useState("");
+  const [npmPackage, setNpmPackage] = useState("");
   const [ready, setReady] = useState(false);
   const [running, setRunning] = useState(false);
   const [log, setLog] = useState<string[]>([]);
@@ -28,7 +28,7 @@ export default function InstallOpenClawStep({
     // Load defaults from backend
     api.defaultOpenclawConfig().then((cfg) => {
       setInstallDir(cfg.install_dir);
-      setRepoUrl(cfg.repo_url);
+      setNpmPackage(cfg.npm_package);
       // Check if already installed
       api.detectOpenclaw(cfg.install_dir).then(setReady);
     });
@@ -45,7 +45,7 @@ export default function InstallOpenClawStep({
     setFinished(false);
     setError(null);
     try {
-      await api.installOpenclaw(installDir, repoUrl);
+      await api.installOpenclaw(installDir, npmPackage);
       // Poll for progress
       const poll = setInterval(async () => {
         const progress = await api.getOpenclawProgress();
@@ -80,7 +80,7 @@ export default function InstallOpenClawStep({
       <h2 className="step-title">第二步：安装 OpenClaw 本地服务</h2>
       <p className="step-desc">
         OpenClaw 是驱动 Claw 智能能力的本地服务内核。QuickClaw
-        将自动将其克隆并安装到您的计算机。
+        将通过 npm 自动安装 OpenClaw 到您的计算机。
       </p>
 
       {/* Already installed banner */}
@@ -114,11 +114,13 @@ export default function InstallOpenClawStep({
             <span className="hint">OpenClaw 将被安装至该目录下的 openclaw/ 子目录</span>
           </div>
           <div className="step-field">
-            <label>仓库地址</label>
+            <label>npm 包名</label>
             <input
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
+              value={npmPackage}
+              onChange={(e) => setNpmPackage(e.target.value)}
+              placeholder="openclaw"
             />
+            <span className="hint">OpenClaw 的 npm 包名称，通常为 "openclaw"</span>
           </div>
           <button className="btn-primary" onClick={startInstall}>
             🚀 开始安装 OpenClaw

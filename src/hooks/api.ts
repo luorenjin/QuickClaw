@@ -28,10 +28,10 @@ export const api = {
   detectOpenclaw: (installDir: string) =>
     invoke<boolean>("detect_openclaw", { installDir: installDir }),
   defaultOpenclawConfig: () =>
-    invoke<{ install_dir: string; repo_url: string }>("default_openclaw_config"),
-  installOpenclaw: (installDir: string, repoUrl: string) =>
+    invoke<{ install_dir: string; npm_package: string }>("default_openclaw_config"),
+  installOpenclaw: (installDir: string, npmPackage: string) =>
     invoke<void>("install_openclaw", {
-      request: { install_dir: installDir, repo_url: repoUrl },
+      request: { install_dir: installDir, npm_package: npmPackage },
     }),
   getOpenclawProgress: () =>
     invoke<ProgressSnapshot>("get_openclaw_progress"),

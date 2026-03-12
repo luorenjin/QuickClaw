@@ -87,7 +87,7 @@ impl From<&InstallProgress> for ProgressSnapshot {
 #[derive(Debug, Deserialize)]
 pub struct OpenClawInstallRequest {
     pub install_dir: String,
-    pub repo_url: String,
+    pub npm_package: String,
 }
 
 /// 聊天消息格式
@@ -202,13 +202,13 @@ pub mod commands {
         environment::detect_openclaw(&install_dir)
     }
 
-    /// 返回默认安装配置（安装目录、仓库地址）
+    /// 返回默认安装配置（安装目录、npm 包名）
     #[tauri::command]
     pub fn default_openclaw_config() -> serde_json::Value {
         let cfg = OpenClawInstallConfig::default();
         serde_json::json!({
             "install_dir": cfg.install_dir,
-            "repo_url": cfg.repo_url,
+            "npm_package": cfg.npm_package,
         })
     }
 
@@ -227,7 +227,7 @@ pub mod commands {
 
         let cfg = OpenClawInstallConfig {
             install_dir: request.install_dir,
-            repo_url: request.repo_url,
+            npm_package: request.npm_package,
         };
 
         let app_clone = app.clone();
