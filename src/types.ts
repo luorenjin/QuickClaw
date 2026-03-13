@@ -1,3 +1,114 @@
+// ─── Studio Domain Models ─────────────────────────────────────────────────────
+
+export type EmployeeType = "human" | "digital";
+export type EmployeeKind = "individual_contributor" | "manager";
+export type EmployeeStatus = "active" | "inactive" | "busy" | "idle";
+
+export interface ModelProfile {
+  id: string;
+  name: string;
+  provider: string;
+  model: string;
+  temperature?: number;
+}
+
+export interface Employee {
+  id: string;
+  organizationId: string;
+  type: EmployeeType;
+  kind: EmployeeKind;
+  name: string;
+  title: string;
+  description: string;
+  status: EmployeeStatus;
+  workspaceId: string;
+  reportsToEmployeeId?: string;
+  modelProfileId?: string;
+  avatar?: string;
+}
+
+export type WorkspaceStatus = "active" | "idle" | "busy";
+
+export interface Workspace {
+  id: string;
+  organizationId: string;
+  employeeId: string;
+  name: string;
+  status: WorkspaceStatus;
+  createdAt: string;
+}
+
+export type MissionStatus = "draft" | "active" | "completed" | "paused";
+
+export interface Mission {
+  id: string;
+  title: string;
+  brief: string;
+  status: MissionStatus;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type TaskStatus = "pending" | "in_progress" | "completed" | "blocked";
+
+export interface Task {
+  id: string;
+  missionId: string;
+  workspaceId: string;
+  assignedToEmployeeId: string;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  createdAt: string;
+}
+
+export type ArtifactVisibility = "private" | "shared" | "mission-shared";
+
+export interface Artifact {
+  id: string;
+  workspaceId: string;
+  taskId?: string;
+  name: string;
+  type: string;
+  content: string;
+  visibility: ArtifactVisibility;
+  createdAt: string;
+}
+
+// ─── Message Protocol ─────────────────────────────────────────────────────────
+
+export type MessageChannel = "human_ceo" | "mission" | "workspace" | "handoff";
+
+export type MessageType =
+  | "GoalSubmitted"
+  | "TaskAssigned"
+  | "ProgressReported"
+  | "ArtifactPublished"
+  | "HandoffRequested"
+  | "TaskCompleted"
+  | "SummaryReported";
+
+export interface StudioMessage {
+  id: string;
+  channel: MessageChannel;
+  type: MessageType;
+  fromEmployeeId: string;
+  toEmployeeId?: string;
+  missionId?: string;
+  workspaceId?: string;
+  payload: Record<string, unknown>;
+  timestamp: string;
+}
+
+export interface Organization {
+  id: string;
+  name: string;
+  mode: string;
+  ownerId: string;
+  createdAt: string;
+}
+
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 export interface ClawConfig {
